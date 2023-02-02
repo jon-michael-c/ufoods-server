@@ -1,4 +1,5 @@
 import Recipes from "../models/Recipe.js";
+import Users from "../models/Users.js";
 
 export const getRecipes = async (req, res) => {
     try {
@@ -23,9 +24,11 @@ export const getRecipe = async (req, res) => {
 
 export const likePost = async (req, res) => {
     try {
+        console.log("Liking post")
         const { id } = req.params;
         const { userId } = req.body;
         const recipe = await Recipes.findById(id);
+        console.log("userId " + userId)
         const isLiked = recipe.likes.get(userId);
         const isDisLiked = recipe.dislikes.get(userId)
         if(isLiked) {
@@ -35,17 +38,17 @@ export const likePost = async (req, res) => {
                 recipe.dislikes.delete(userId)
             } 
         } else {
-            postMessage.likes.set(userId, true)
+            recipe.likes.set(userId, true)
         }
         
-        const updatePost = await Recipes.findByIdAndUpdate(
+        await Recipes.findByIdAndUpdate(
             id,
-            {likes: recipe.likes},
-            {dislikes: recipe.dislikes},
+            {likes: recipe.likes, dislikes: recipe.dislikes},
             {new : true}
         )
-        
-        res.status(200).json(updatePost)
+            
+        console.log("updated")
+        res.status(200).json({message: "done"})
     
     } catch (err) {
         res.status(401).json({message: err.message})

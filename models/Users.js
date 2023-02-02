@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import validator from "validator";
 
 const UserSchema = new mongoose.Schema({
+  
   email : {
     type: String,
     required: true,
@@ -36,7 +37,10 @@ UserSchema.statics.login = async function (email, password) {
     throw Error("Incorrect Password");
   }
 
-  return user;
+  return {
+    id: user._id.toString(),
+    email: user.email,
+  };
 }
 
 UserSchema.statics.signup = async function(email, password) {

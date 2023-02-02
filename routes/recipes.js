@@ -1,4 +1,5 @@
 import express from "express"
+import { verify } from "jsonwebtoken";
 import { getRecipe, getRecipes, likePost } from "../controllers/recipes.js";
 const router = express.Router();
 
@@ -6,7 +7,7 @@ const router = express.Router();
 router.get("/getRecipes", getRecipes)
 router.get("/getRecipe/:id", getRecipe)
 
-router.patch("/likePost/:id", likePost)
+router.patch("/likePost/:id", verify, likePost)
 //router.patch("/updatePost/:id", updatePost);
 
 

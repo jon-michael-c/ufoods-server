@@ -10,8 +10,10 @@ const createToken = (_id) => {
 export const getUser = async (req, res) => {
     try {
         const {id} = req.params
-        const user = await Users.findById(id)
-        res.status(200).json(user)
+        console.log(id)
+        const user = await Users.findOne({email: id})
+        console.log(user._id.toString())
+        res.status(200).json({userId: user._id.toString()})
     } catch(err) {
         res.status(404).json({message: err.message})
     }
@@ -52,7 +54,8 @@ export const loginUser = async (req, res) => {
     try {
         const user = await Users.login(email, password)
         const token = createToken(user._id);
-        res.status(200).json({email, token});
+        const id = user.id
+        res.status(200).json({id, email, token});
     } catch(err) {
         res.status(400).json({message: err.message})
     }
